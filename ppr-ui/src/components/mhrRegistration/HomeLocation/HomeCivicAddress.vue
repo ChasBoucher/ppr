@@ -126,6 +126,9 @@ export default defineComponent({
 .address-region {::v-deep .v-input__slot{
   border-bottom: thin dashed;
   color: #212529;
+}}
+.address-region {::v-deep input{
+  color: #212529 !important;
   font-size: 16px;
 }}
 .address-region {::v-deep .v-label{
