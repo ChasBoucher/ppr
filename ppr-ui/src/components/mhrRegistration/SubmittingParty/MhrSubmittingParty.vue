@@ -108,7 +108,7 @@
           <v-row no-gutters>
             <v-col>
               <v-text-field
-                v-mask="'(###) ###-####'"
+                v-mask="'(NNN) NNN-NNNN'"
                 filled
                 id="submitting-party-phone"
                 class="pt-4 pr-3"
@@ -199,12 +199,13 @@ export default defineComponent({
     const {
       customRules,
       invalidSpaces,
-      minLength,
       maxLength,
       isStringOrNumber,
       required,
       isNumber,
-      isEmail
+      isEmail,
+      phoneMinLength,
+      isNumberPhone
     } = useInputRules()
 
     const {
@@ -264,9 +265,9 @@ export default defineComponent({
     )
 
     const phoneRules = customRules(
-      required('Enter a phone number'),
-      minLength(14),
-      invalidSpaces()
+      phoneMinLength(14),
+      invalidSpaces(),
+      isNumberPhone()
     )
     const middleNameRules = customRules(isStringOrNumber(), maxLength(15), invalidSpaces())
 

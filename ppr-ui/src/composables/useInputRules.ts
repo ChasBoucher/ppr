@@ -12,6 +12,12 @@ export const useInputRules = () => {
     ]
   }
 
+  const phoneMinLength = (minLength: number, isMinLengthForDigits: boolean = false): Array<Function> => {
+    return [
+      v => (v || '').length >= minLength || `${'Minimum 10 digits'}`
+    ]
+  }
+
   const isStringOrNumber = (): Array<Function> => {
     return [
       v => (v ? /^[a-zA-Z0-9_ ]*$/g.test(v) : true) || 'Invalid characters'
@@ -51,6 +57,22 @@ export const useInputRules = () => {
       v => ((v && maxDigits) ? maxDigitRule.test(v) : true) || `Maximum ${maxDigits} characters`,
       v => ((v && maxValue) ? v < maxValue : true) || `${numberType} must be less than ${maxValue}`,
       v => (v ? /^\d+$/g.test(v) : true) || `${customMsg || 'Must contain numbers only'}`
+    ]
+  }
+
+  const isNumberPhone = (
+    numberType: string = null,
+    maxDigits: number = null,
+    maxValue: number = null,
+    customMsg: string = null
+  ): Array<Function> => {
+    const maxDigitRule = new RegExp(`^\\d{1,${maxDigits}}$`)
+
+    return [
+      v => ((v && numberType) ? /^\d+$/g.test(v) : true) || `${numberType} must be a valid whole number (cannot contain decimals)`,
+      v => ((v && maxDigits) ? maxDigitRule.test(v) : true) || `Maximum ${maxDigits} characters`,
+      v => ((v && maxValue) ? v < maxValue : true) || `${numberType} must be less than ${maxValue}`,
+      v => (v.replace('(', '').replace(') ', '').replace('-', '') ? /^\d+$/g.test(v.replace('(', '').replace(') ', '').replace('-', '')) : true) || `${customMsg || 'Must contain numbers only'}`
     ]
   }
 
@@ -94,6 +116,8 @@ export const useInputRules = () => {
     startsWith,
     greaterThan,
     minLength,
-    maxLength
+    maxLength,
+    phoneMinLength,
+    isNumberPhone
   }
 }

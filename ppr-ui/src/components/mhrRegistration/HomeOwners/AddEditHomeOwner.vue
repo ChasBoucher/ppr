@@ -139,7 +139,7 @@
             <v-col cols="6">
               <v-text-field
                 id="phone-number"
-                v-mask="'(###) ###-####'"
+                v-mask="'(NNN) NNN-NNNN'"
                 v-model="owner.phoneNumber"
                 filled
                 :rules="phoneNumberRules"
@@ -264,7 +264,7 @@ export default defineComponent({
     }
   },
   setup (props, context) {
-    const { required, customRules, maxLength, minLength } = useInputRules()
+    const { required, customRules, maxLength, minLength, invalidSpaces, phoneMinLength, isNumberPhone } = useInputRules()
 
     const {
       getSideTitle,
@@ -330,8 +330,10 @@ export default defineComponent({
         maxLength(150)
       ),
       phoneNumberRules: customRules(
-        required('Enter a phone number'),
-        minLength(14)
+        phoneMinLength(14),
+        isNumberPhone(),
+        minLength(14),
+        invalidSpaces()
       )
     })
 
