@@ -100,7 +100,6 @@
             label="Email Address"
             v-model="submittingParty.emailAddress"
             :rules="emailRules"
-            validate-on-blur
           />
 
           <!-- Phone Number -->
@@ -112,15 +111,13 @@
                 filled
                 id="submitting-party-phone"
                 class="pt-4 pr-3"
-                label="Phone Number"
+                label="Phone Number (Optional)"
                 v-model="submittingParty.phoneNumber"
                 :rules="phoneRules"
-                validate-on-blur
             />
             </v-col>
             <v-col>
               <v-text-field
-                type="number"
                 filled
                 id="submitting-party-phone-ext"
                 class="pt-4 px-2"
@@ -164,6 +161,7 @@ import { PartyAddressSchema } from '@/schemas'
 import { cloneDeep } from 'lodash'
 import { VueMaskDirective } from 'v-mask'
 import { mutateOriginalLengthTrust } from '@/store/mutations'
+import { max } from 'moment'
 
 /* eslint-enable no-unused-vars */
 
@@ -204,8 +202,7 @@ export default defineComponent({
       required,
       isNumber,
       isEmail,
-      phoneMinLength,
-      isNumberPhone
+      isPhone
     } = useInputRules()
 
     const {
@@ -259,16 +256,15 @@ export default defineComponent({
     )
 
     const emailRules = customRules(
-      required('Enter an email'),
+      maxLength(250),
       isEmail(),
       invalidSpaces()
     )
 
     const phoneRules = customRules(
-      phoneMinLength(14),
-      invalidSpaces(),
-      isNumberPhone()
+      isPhone(14, null)
     )
+
     const middleNameRules = customRules(isStringOrNumber(), maxLength(15), invalidSpaces())
 
     const lastNameRules = customRules(
@@ -283,7 +279,7 @@ export default defineComponent({
       invalidSpaces()
     )
 
-    const phoneExtensionRules = customRules(isNumber(), invalidSpaces())
+    const phoneExtensionRules = customRules(isNumber(), invalidSpaces(), maxLength(5))
 
     const updateValidity = (valid) => {
       localState.addressValid = valid

@@ -12,12 +12,6 @@ export const useInputRules = () => {
     ]
   }
 
-  const phoneMinLength = (minLength: number, isMinLengthForDigits: boolean = false): Array<Function> => {
-    return [
-      v => (v || '').length >= minLength || `${'Minimum 10 digits'}`
-    ]
-  }
-
   const isStringOrNumber = (): Array<Function> => {
     return [
       v => (v ? /^[a-zA-Z0-9_ ]*$/g.test(v) : true) || 'Invalid characters'
@@ -60,27 +54,21 @@ export const useInputRules = () => {
     ]
   }
 
-  const isNumberPhone = (
-    numberType: string = null,
+  const isPhone = (
     maxDigits: number = null,
-    maxValue: number = null,
     customMsg: string = null
   ): Array<Function> => {
-    const maxDigitRule = new RegExp(`^\\d{1,${maxDigits}}$`)
-
     return [
-      v => ((v && numberType) ? /^\d+$/g.test(v) : true) || `${numberType} must be a valid whole number (cannot contain decimals)`,
-      v => ((v && maxDigits) ? maxDigitRule.test(v) : true) || `Maximum ${maxDigits} characters`,
-      v => ((v && maxValue) ? v < maxValue : true) || `${numberType} must be less than ${maxValue}`,
-      v => (v.replace('(', '').replace(') ', '').replace('-', '') ? /^\d+$/g.test(v.replace('(', '').replace(') ', '').replace('-', '')) : true) || `${customMsg || 'Must contain numbers only'}`
+      v => ((v && maxDigits) ? v.length >= maxDigits : true) || 'Minimum 10 characters',
+      v => (v ? /^\d+$/g.test(v.replace('(', '').replace(') ', '').replace('-', '')) : true) || `${customMsg || 'Must contain numbers only'}`
     ]
   }
 
   const isEmail = (): Array<Function> => [
-    (v: string) => !!v || 'Email address is required',
+    (v: string) => !!v || 'Enter an email address',
     (v: string) => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return pattern.test(v) || 'Valid email is required'
+      return pattern.test(v) || 'Enter a valid email address'
     }
   ]
 
@@ -117,7 +105,6 @@ export const useInputRules = () => {
     greaterThan,
     minLength,
     maxLength,
-    phoneMinLength,
-    isNumberPhone
+    isPhone
   }
 }

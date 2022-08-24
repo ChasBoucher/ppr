@@ -138,14 +138,13 @@
           <v-row>
             <v-col cols="6">
               <v-text-field
-                id="phone-number"
                 v-mask="'(NNN) NNN-NNNN'"
-                v-model="owner.phoneNumber"
+                id="phone-number"
                 filled
-                :rules="phoneNumberRules"
-                label="Phone Number"
+                label="Phone Number (Optional)"
                 data-test-id="phone-number"
-                validate-on-blur
+                v-model="owner.phoneNumber"
+                :rules="phoneNumberRules"
               />
             </v-col>
             <v-col cols="6">
@@ -153,7 +152,7 @@
                 id="phone-ext"
                 v-model="owner.phoneExtension"
                 filled
-                :rules="maxLength(5, true)"
+                :rules="phoneExtensionRules"
                 label="Extension (Optional)"
                 data-test-id="phone-ext"
               />
@@ -264,7 +263,7 @@ export default defineComponent({
     }
   },
   setup (props, context) {
-    const { required, customRules, maxLength, minLength, invalidSpaces, phoneMinLength, isNumberPhone } = useInputRules()
+    const { required, customRules, maxLength, minLength, invalidSpaces, isPhone, isNumber } = useInputRules()
 
     const {
       getSideTitle,
@@ -330,11 +329,12 @@ export default defineComponent({
         maxLength(150)
       ),
       phoneNumberRules: customRules(
-        phoneMinLength(14),
-        isNumberPhone(),
-        minLength(14),
-        invalidSpaces()
-      )
+        isPhone(14, null)
+      ),
+      phoneExtensionRules: customRules(
+        isNumber(),
+        invalidSpaces(),
+        maxLength(5))
     })
 
     const done = (): void => {
@@ -387,6 +387,7 @@ export default defineComponent({
       addHomeOwnerForm,
       maxLength,
       minLength,
+      isNumber,
       addressSchema,
       ...toRefs(localState)
     }
