@@ -62,7 +62,7 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
     if (showGroups.value) {
       // At leas one group showing with one or more owners
       return HomeTenancyTypes.COMMON
-    } else if (numOfOwners === 1 && getMhrRegistrationHomeOwners.value[0].address !== undefined) {
+    } else if (numOfOwners === 1) {
       // One owner without groups showing
       // Added second condition, because when an owner exists as a Sole Ownership, editing and clicking Done,
       // will change status to Tenants in Common unless above logic is in place..
@@ -77,10 +77,12 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
   const getGroupTenancyType = (group: MhrRegistrationHomeOwnerGroupIF): HomeTenancyTypes => {
     const numOfOwnersInGroup = group.owners.length
 
-    if (numOfOwnersInGroup === 1) {
+    if (showGroups.value) {
       return HomeTenancyTypes.COMMON
     } else if (numOfOwnersInGroup > 1) {
       return HomeTenancyTypes.JOINT
+    } else if (numOfOwnersInGroup === 1) {
+      return HomeTenancyTypes.SOLE
     } else {
       return HomeTenancyTypes.NA
     }
