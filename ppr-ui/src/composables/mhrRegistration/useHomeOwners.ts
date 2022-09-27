@@ -300,7 +300,7 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
       var isHomeOwnersValid = showGroups.value ? !getTotalOwnershipAllocationStatus().hasTotalAllocationError : true
       if (getMhrRegistrationHomeOwnerGroups.value.length === 0 ||
             !getMhrRegistrationHomeOwnerGroups.value[0].owners ||
-            getMhrRegistrationHomeOwnerGroups.value[0].type === 'N/A') {
+            getMhrRegistrationHomeOwnerGroups.value[0].type === HomeTenancyTypes.NA) {
         isHomeOwnersValid = false
       }
       if (getMhrRegistrationHomeOwnerGroups.value.length === 0) {
