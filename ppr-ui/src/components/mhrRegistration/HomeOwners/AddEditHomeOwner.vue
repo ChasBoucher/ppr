@@ -278,6 +278,10 @@ export default defineComponent({
     isHomeOwnerPerson: {
       type: Boolean,
       default: false
+    },
+    validate: {
+      type: Boolean,
+      default: false
     }
   },
   setup (props, context) {

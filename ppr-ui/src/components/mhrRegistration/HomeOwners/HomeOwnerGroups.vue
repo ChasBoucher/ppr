@@ -87,7 +87,11 @@ export default defineComponent({
   props: {
     groupId: { type: String },
     fractionalData: { type: Object as () => FractionalOwnershipWithGroupIdIF },
-    isAddingHomeOwner: { type: Boolean } // makes additional Group available in dropdown when adding a new home owner
+    isAddingHomeOwner: { type: Boolean }, // makes additional Group available in dropdown when adding a new home owner
+    validate: {
+      type: Boolean,
+      default: false
+    }
   },
 
   setup (props, { emit }) {

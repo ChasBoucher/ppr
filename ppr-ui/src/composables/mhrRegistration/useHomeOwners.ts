@@ -62,10 +62,8 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
     if (showGroups.value) {
       // At leas one group showing with one or more owners
       return HomeTenancyTypes.COMMON
-    } else if (numOfOwners === 1) {
+    } else if (numOfOwners === 1 && getMhrRegistrationHomeOwners.value[0].id) {
       // One owner without groups showing
-      // Added second condition, because when an owner exists as a Sole Ownership, editing and clicking Done,
-      // will change status to Tenants in Common unless above logic is in place..
       return HomeTenancyTypes.SOLE
     } else if (numOfOwners > 1) {
       // More than one owner without groups showing
@@ -300,10 +298,11 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
     () => {
       // set step validation for home owners
       var isHomeOwnersValid = showGroups.value ? !getTotalOwnershipAllocationStatus().hasTotalAllocationError : true
-      if (getMhrRegistrationHomeOwnerGroups.value.length === 0 || !getMhrRegistrationHomeOwnerGroups.value[0].owners) {
+      if (getMhrRegistrationHomeOwnerGroups.value.length === 0 ||
+            !getMhrRegistrationHomeOwnerGroups.value[0].owners ||
+            getMhrRegistrationHomeOwnerGroups.value[0].type === 'N/A') {
         isHomeOwnersValid = false
       }
-
       if (getMhrRegistrationHomeOwnerGroups.value.length === 0) {
         setShowGroups(false)
       } else {
