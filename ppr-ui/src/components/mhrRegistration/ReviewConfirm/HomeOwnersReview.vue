@@ -47,7 +47,11 @@ export default defineComponent({
   components: { HomeOwnersTable },
   // eslint-disable-next-line
   setup() {
-    const { getMhrRegistrationHomeOwnerGroups, getMhrRegistrationHomeOwners, getMhrRegistrationValidationModel } = useGetters<any>([
+    const {
+      getMhrRegistrationHomeOwnerGroups,
+      getMhrRegistrationHomeOwners,
+      getMhrRegistrationValidationModel
+    } = useGetters<any>([
       'getMhrRegistrationHomeOwnerGroups',
       'getMhrRegistrationHomeOwners',
       'getMhrRegistrationValidationModel'
@@ -61,7 +65,8 @@ export default defineComponent({
 
     const localState = reactive({
       homeOwners: computed(() => getMhrRegistrationHomeOwners.value),
-      hasHomeOwners: computed(() => getMhrRegistrationHomeOwnerGroups.value.length > 0 && getMhrRegistrationHomeOwnerGroups.value[0].type !== 'N/A'),
+      hasHomeOwners: computed(() => getMhrRegistrationHomeOwnerGroups.value.length > 0 &&
+        getMhrRegistrationHomeOwnerGroups.value[0].type !== HomeTenancyTypes.NA),
       showStepError: computed(() => !getStepValidation(MhrSectVal.HOME_OWNERS_VALID)),
       hasGroups: computed(() => getHomeTenancyType() === HomeTenancyTypes.COMMON)
     })
