@@ -300,20 +300,18 @@ export function useHomeOwners (isPerson: boolean = false, isEditMode: boolean = 
     () => getMhrRegistrationHomeOwnerGroups.value,
     () => {
       // set step validation for home owners
-      var hasOwners = getMhrRegistrationHomeOwnerGroups.value.every(group => group.owners.length > 0)
       var isHomeOwnersValid = showGroups.value ? !getTotalOwnershipAllocationStatus().hasTotalAllocationError : true
-      if (getMhrRegistrationHomeOwnerGroups.value.length === 0 ||
-             !hasOwners ||
-            getMhrRegistrationHomeOwnerGroups.value[0].type === HomeTenancyTypes.NA) {
+      if (getMhrRegistrationHomeOwnerGroups.value.length === 0 || !getMhrRegistrationHomeOwnerGroups.value[0].owners) {
         isHomeOwnersValid = false
       }
+
       if (getMhrRegistrationHomeOwnerGroups.value.length === 0) {
         setShowGroups(false)
       } else {
         // update group tenancy for all groups
         getMhrRegistrationHomeOwnerGroups.value.every(group => set((group.type = getGroupTenancyType(group))))
         // check if at least one Owner Group has no owners. Used to display an error for the table.
-        hasEmptyGroup.value = !hasOwners
+        hasEmptyGroup.value = !getMhrRegistrationHomeOwnerGroups.value.every(group => group.owners.length > 0)
       }
 
       setValidation(MhrSectVal.HOME_OWNERS_VALID, MhrCompVal.OWNERS_VALID, isHomeOwnersValid)

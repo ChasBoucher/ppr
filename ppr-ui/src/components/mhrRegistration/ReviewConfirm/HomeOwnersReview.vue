@@ -19,9 +19,9 @@
             <v-col cols="3"><span class="generic-label">Home Tenancy Type </span></v-col>
             <v-col class="pl-2">{{ getHomeTenancyType() || 'N/A' }}</v-col>
           </v-row>
-          <v-row no-gutters class="pt-2" v-show="hasGroups">
+          <v-row no-gutters class="pt-2">
             <v-col cols="3"><span class="generic-label">Total Ownership <br>Allocated </span></v-col>
-            <v-col class="pl-2">{{  hasGroups ? getTotalOwnershipAllocationStatus().totalAllocation : 'N/A' }}</v-col>
+            <v-col class="pl-2">{{ getTotalOwnershipAllocationStatus().totalAllocation || 'N/A' }}</v-col>
           </v-row>
         </article>
 
@@ -38,7 +38,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from '@vue/composition-api'
 import { useGetters } from 'vuex-composition-helpers'
-import { HomeTenancyTypes, RouteNames } from '@/enums'
+import { RouteNames } from '@/enums'
 import { HomeOwnersTable } from '@/components/mhrRegistration/HomeOwners'
 import { useHomeOwners, useMhrValidations } from '@/composables/mhrRegistration'
 
@@ -47,12 +47,7 @@ export default defineComponent({
   components: { HomeOwnersTable },
   // eslint-disable-next-line
   setup() {
-    const {
-      getMhrRegistrationHomeOwnerGroups,
-      getMhrRegistrationHomeOwners,
-      getMhrRegistrationValidationModel
-    } = useGetters<any>([
-      'getMhrRegistrationHomeOwnerGroups',
+    const { getMhrRegistrationHomeOwners, getMhrRegistrationValidationModel } = useGetters<any>([
       'getMhrRegistrationHomeOwners',
       'getMhrRegistrationValidationModel'
     ])
@@ -65,10 +60,8 @@ export default defineComponent({
 
     const localState = reactive({
       homeOwners: computed(() => getMhrRegistrationHomeOwners.value),
-      hasHomeOwners: computed(() => getMhrRegistrationHomeOwnerGroups.value.length > 0 &&
-        getMhrRegistrationHomeOwnerGroups.value[0].type !== HomeTenancyTypes.NA),
-      showStepError: computed(() => !getStepValidation(MhrSectVal.HOME_OWNERS_VALID)),
-      hasGroups: computed(() => getHomeTenancyType() === HomeTenancyTypes.COMMON)
+      hasHomeOwners: computed(() => localState.homeOwners.length > 0),
+      showStepError: computed(() => !getStepValidation(MhrSectVal.HOME_OWNERS_VALID))
     })
 
     return {
