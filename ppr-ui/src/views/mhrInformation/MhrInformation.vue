@@ -179,7 +179,7 @@ import { BaseAddress } from '@/composables/address'
 import { unsavedChangesDialog, registrationSaveDraftError } from '@/resources/dialogOptions'
 import { cloneDeep } from 'lodash'
 import AccountInfo from '@/components/common/AccountInfo.vue'
-import { AccountInfoIF } from '@/interfaces' // eslint-disable-line no-unused-vars
+import { AccountInfoIF, MhrTransferApiIF } from '@/interfaces' // eslint-disable-line no-unused-vars
 
 export default defineComponent({
   name: 'MhrInformation',
@@ -401,9 +401,15 @@ export default defineComponent({
       localState.loading = true
       const apiData = await buildApiData(true)
 
-      const mhrTransferDraft = getMhrInformation.value.draftNumber
-        ? await updateMhrDraft(getMhrInformation.value.draftNumber, apiData)
-        : await createMhrTransferDraft(apiData)
+      const mhrTransferDraft = async (): Promise<MhrTransferApiIF> => {
+        if (getMhrTransferHomeOwners.value.draftNumber) {
+          return await updateMhrDraft(getMhrInformation.value.draftNumber, apiData)
+        } else {
+          context.emit('snackBarMsg', 'Registration successfully added to your table.')
+          return await createMhrTransferDraft(apiData)
+        }
+      }
+
       localState.loading = false
       if (!mhrTransferDraft.error) {
         setUnsavedChanges(false)

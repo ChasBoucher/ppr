@@ -146,6 +146,9 @@ export const getCourtOrderInformation = (state: StateIF): CourtOrderIF => {
   return state.stateModel.registration.courtOrderInformation
 }
 
+export const getCurrentRegistrationsTab = (state: StateIF): Number => {
+  return state.stateModel.currentRegistrationsTab
+}
 /** The current draft of a registration. */
 export const getDraft = (state: StateIF): DraftIF => {
   return state.stateModel.registration.draft

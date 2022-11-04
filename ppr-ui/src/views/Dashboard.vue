@@ -190,6 +190,7 @@ export default class Dashboard extends Vue {
     if (this.isRoleStaff || this.isRoleStaffBcol || this.isRoleStaffReg) {
       return this.hasMhrRole && getFeatureFlag('mhr-ui-enabled')
     } else {
+      this.toggleSnackbar = true
       return this.getUserProductSubscriptionsCodes.includes(ProductCode.MHR) && getFeatureFlag('mhr-ui-enabled')
     }
   }
