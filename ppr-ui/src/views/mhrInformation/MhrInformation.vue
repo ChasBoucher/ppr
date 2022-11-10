@@ -179,7 +179,7 @@ import { BaseAddress } from '@/composables/address'
 import { unsavedChangesDialog, registrationSaveDraftError } from '@/resources/dialogOptions'
 import { cloneDeep } from 'lodash'
 import AccountInfo from '@/components/common/AccountInfo.vue'
-import { AccountInfoIF, MhrTransferApiIF } from '@/interfaces' // eslint-disable-line no-unused-vars
+import { AccountInfoIF, RegTableNewItemI } from '@/interfaces' // eslint-disable-line no-unused-vars
 
 export default defineComponent({
   name: 'MhrInformation',
@@ -227,12 +227,14 @@ export default defineComponent({
       setMhrTransferHomeOwnerGroups,
       setMhrTransferCurrentHomeOwnerGroups,
       setMhrTransferAttentionReference,
-      setUnsavedChanges
+      setUnsavedChanges,
+      setRegTableNewItem
     } = useActions<any>([
       'setMhrTransferHomeOwnerGroups',
       'setMhrTransferCurrentHomeOwnerGroups',
       'setMhrTransferAttentionReference',
-      'setUnsavedChanges'
+      'setUnsavedChanges',
+      'setRegTableNewItem'
     ])
 
     const { setEmptyMhrTransfer } = useActions<any>(['setEmptyMhrTransfer'])
@@ -400,14 +402,18 @@ export default defineComponent({
     const onSave = async (): Promise<void> => {
       localState.loading = true
       const apiData = await buildApiData(true)
+      const mhrTransferDraft = getMhrInformation.value.draftNumber
+        ? await updateMhrDraft(getMhrInformation.value.draftNumber, apiData)
+        : await createMhrTransferDraft(apiData)
 
-      const mhrTransferDraft = async (): Promise<MhrTransferApiIF> => {
-        if (getMhrTransferHomeOwners.value.draftNumber) {
-          return await updateMhrDraft(getMhrInformation.value.draftNumber, apiData)
-        } else {
-          context.emit('snackBarMsg', 'Registration successfully added to your table.')
-          return await createMhrTransferDraft(apiData)
+      if (!getMhrInformation.value.draftNumber) {
+        const newItem: RegTableNewItemI = {
+          addedReg: String(mhrTransferDraft.draftNumber),
+          addedRegParent: apiData.mhrNumber,
+          addedRegSummary: null,
+          prevDraft: String(getMhrInformation.value.changes[0].documentId) || ''
         }
+        setRegTableNewItem(newItem)
       }
 
       localState.loading = false
